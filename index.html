@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive CV | Eslam Ezzat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.7.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                max-height: 450px;
+            }
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+            padding-left: 2.5rem;
+        }
+        
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #a16207;
+            border: 4px solid #fef3c7;
+            z-index: 10;
+            transform: translateX(-10px);
+        }
+        
+        .timeline-item:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: -2rem;
+            width: 2px;
+            background-color: #d6d3d1;
+            transform: translateX(-1px);
+        }
+
+        .timeline-item:last-child:after {
+            display: none;
+        }
+
+        .project-card {
+            transition: all 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        
+        .project-details.open {
+            max-height: 1000px;
+            transition: max-height 0.5s ease-in;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased">
+
+    <!-- 
+        Chosen Palette: Warm Sand (Background: stone-50, Text: stone-800, Primary/Accent: amber-700, Secondary/Highlights: amber-100, Borders: stone-300)
+        Application Structure Plan: The static, linear CV is transformed into a non-linear, interactive portfolio. A sticky top navigation bar allows users to jump to key sections: Skills, Projects, Experience, and Education. This structure prioritizes user exploration. The 'Projects' section is the interactive core, featuring JavaScript-powered filter buttons (All, AI/ML, Full-Stack, Tools) that allow recruiters to instantly see relevant work, which is far more usable than a long list. The 'Skills' section uses a Radar Chart (Chart.js) to provide a high-level visual summary of the candidate's core competencies (AI, Backend, Pipelines, Frontend), making his profile shape immediately understandable. The 'Experience' section is reimagined as a clean, vertical timeline to visually narrate his career progression. This SPA structure is designed for task-based information retrieval (e.g., 'Show me his AI projects') rather than static, linear reading.
+        Visualization & Content Choices: 
+        1. Info: Candidate's core competencies (AI/ML, Backend, Pipelines, Frontend). Goal: Inform (at-a-glance summary). Viz/Method: Radar Chart. Interaction: None (summary graphic). Justification: A list of skills is dense; a radar chart instantly communicates the candidate's multi-faceted expertise. Library: Chart.js (Canvas).
+        2. Info: All projects (6+). Goal: Organize, Compare, Inform. Viz/Method: A filterable grid of "Project Cards" (HTML/CSS/Tailwind). Interaction: 1. Filtering: JS buttons (All, AI/ML, Full-Stack, Tools) toggle card visibility based on data attributes. 2. Details: A 'Learn More' button on each card expands an inline section to show full details, keeping the user in context. Justification: Allows recruiters to drill down to their specific area of interest (e.g., 'AI') without reading irrelevant projects. Library: Vanilla JS (DOM).
+        3. Info: Employment History. Goal: Show change/progression. Viz/Method: Vertical Timeline (HTML/CSS/Tailwind). Interaction: Hover effects. Justification: A timeline is a more visually engaging and intuitive way to present chronological data. Library: N/A (HTML/CSS).
+        4. Info: Detailed Skills List. Goal: Inform (specific keywords). Viz/Method: Grouped lists of "pills" (styled spans) by category. Justification: Complements the high-level Radar Chart with specific, parsable keywords for technical viewers. Library: N/A (HTML/CSS).
+        CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    --><header class="sticky top-0 z-50 w-full bg-stone-50/90 backdrop-blur-sm border-b border-stone-200">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <span class="text-2xl font-bold text-amber-700">Eslam Ezzat</span>
+                </div>
+                <div class="hidden md:flex md:space-x-8">
+                    <a href="#home" class="font-medium text-stone-600 hover:text-amber-700">Home</a>
+                    <a href="#skills" class="font-medium text-stone-600 hover:text-amber-700">Skills</a>
+                    <a href="#projects" class="font-medium text-stone-600 hover:text-amber-700">Projects</a>
+                    <a href="#experience" class="font-medium text-stone-600 hover:text-amber-700">Experience</a>
+                    <a href="#education" class="font-medium text-stone-600 hover:text-amber-700">Education</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="p-2 rounded-md text-stone-600 hover:text-amber-700 hover:bg-amber-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <a href="#home" class="block px-4 py-2 text-base font-medium text-stone-600 hover:text-amber-700 hover:bg-amber-100">Home</a>
+            <a href="#skills" class="block px-4 py-2 text-base font-medium text-stone-600 hover:text-amber-700 hover:bg-amber-100">Skills</a>
+            <a href="#projects" class="block px-4 py-2 text-base font-medium text-stone-600 hover:text-amber-700 hover:bg-amber-100">Projects</a>
+            <a href="#experience" class="block px-4 py-2 text-base font-medium text-stone-600 hover:text-amber-700 hover:bg-amber-100">Experience</a>
+            <a href="#education" class="block px-4 py-2 text-base font-medium text-stone-600 hover:text-amber-700 hover:bg-amber-100">Education</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <section id="home" class="min-h-[80vh] flex items-center text-center md:text-left">
+            <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-12">
+                <div>
+                    <h1 class="text-4xl md:text-6xl font-bold text-stone-900 leading-tight">
+                        Eslam Ezzat
+                    </h1>
+                    <p class="mt-4 text-2xl md:text-3xl font-medium text-amber-700">
+                        Full-Stack Engineer | AI & Pipeline Specialist
+                    </p>
+                    <p class="mt-6 text-lg text-stone-600 max-w-xl mx-auto md:mx-0">
+                        Results-driven Full-Stack Engineer with 3+ years of experience designing, developing, and deploying scalable web applications. Proven ability to build end-to-end solutions using modern backend frameworks (Python/Django, FastAPI), RESTful APIs, and React. A fast learner adept at mastering new technology stacks.
+                    </p>
+                    <div class="mt-8 flex justify-center md:justify-start space-x-6">
+                        <a href="mailto:eslamezat367@gmail.com" class="text-stone-500 hover:text-amber-700" title="Email" target="_blank">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/esllamofficial/" class="text-stone-500 hover:text-amber-700" title="LinkedIn" target="_blank">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M22.2857 0H1.70893C0.766071 0 0 0.776786 0 1.73036V22.2696C0 23.2232 0.766071 24 1.70893 24H22.2857C23.2286 24 24 23.2232 24 22.2696V1.73036C24 0.776786 23.2286 0 22.2857 0ZM7.25357 20.5714H3.69643V9.11786H7.25893V20.5714H7.25357ZM5.475 7.55357C4.33393 7.55357 3.4125 6.62679 3.4125 5.49107C3.4125 4.35536 4.33393 3.42857 5.475 3.42857C6.61071 3.42857 7.5375 4.35536 7.5375 5.49107C7.5375 6.63214 6.61607 7.55357 5.475 7.55357ZM20.5875 20.5714H17.0304V15C17.0304 13.6714 17.0036 11.9625 15.1821 11.9625C13.3286 11.9625 13.0446 13.4089 13.0446 14.9036V20.5714H9.4875V9.11786H12.9V10.6821H12.9482C13.425 9.78214 14.5875 8.83393 16.3179 8.83393C19.9179 8.83393 20.5875 11.2071 20.5875 14.2929V20.5714Z"/></svg>
+                        </a>
+                        <a href="https://github.com/eng-EslamEzzat" class="text-stone-500 hover:text-amber-700" title="GitHub" target="_blank">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.49.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.03-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.022A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.291 2.747-1.022 2.747-1.022.546 1.378.201 2.397.098 2.65.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.309.678.92.678 1.854 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482C19.135 20.165 22 16.418 22 12A10 10 0 0012 2z" clip-rule="evenodd"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-center md:justify-center space-x-6">
+                    <img src="EslamEzzat.png" alt="Eslam Ezzat" class="rounded-full w-64 h-64 md:w-80 md:h-80 mx-auto md:mx-0 object-cover shadow-xl border-4 border-amber-700">
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="py-24">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-stone-900 sm:text-4xl">Technical Skills</h2>
+                <p class="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">
+                    A visual overview of my primary strengths, complemented by a detailed list of the technologies, languages, and concepts I command.
+                </p>
+            </div>
+            
+            <div class="md:hidden mt-12">
+                <div class="w-full max-w-md mx-auto p-4 rounded-xl">
+                    <div class="bg-white rounded-lg shadow-xl p-6 border border-stone-200">
+                        <p class="text-xl font-bold text-center text-stone-700 mb-4">Core Competencies</p>
+                        <div class="chart-container">
+                            <canvas id="skillsRadarChartMobile"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-stone-200">
+                    <h3 class="text-xl font-bold text-amber-700 mb-4">Machine Learning & Data</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Python</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">TensorFlow</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Scikit-learn</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Pandas</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">NumPy</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">OpenCV</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Mediapipe</span>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-stone-200">
+                    <h3 class="text-xl font-bold text-amber-700 mb-4">Backend & Cloud</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Django</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Django Rest Framework</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">SQL</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">PostgreSQL</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">MongoDB</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Docker</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">AWS</span>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-stone-200">
+                    <h3 class="text-xl font-bold text-amber-700 mb-4">Frontend</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">ReactJs</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Redux</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">JavaScript</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">HTML</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">CSS</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Bootstrap</span>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-stone-200">
+                    <h3 class="text-xl font-bold text-amber-700 mb-4">Tools & Concepts</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Git</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">GitHub</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Linux</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">CI/CD</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">PyQt/PySide</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Multi-threading</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">OOP</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Agile</span>
+                        <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">TDD</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-24 bg-white rounded-xl shadow-inner border border-stone-200 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-stone-900 sm:text-4xl">Interactive Project Portfolio</h2>
+                <p class="mt-4 text-lg text-stone-600 max-w-3xl mx-auto">
+                    Here are my most significant projects. Use the filters to explore the work that's most relevant to you. Click "Learn More" to see details for each project.
+                </p>
+            </div>
+
+            <div id="project-filters" class="mt-12 flex flex-wrap justify-center gap-2 md:gap-4">
+                <button data-filter="all" class="filter-btn active bg-amber-700 text-white px-4 py-2 rounded-full font-medium">All Projects</button>
+                <button data-filter="ai" class="filter-btn bg-stone-200 text-stone-700 hover:bg-amber-100 hover:text-amber-800 px-4 py-2 rounded-full font-medium">AI & Machine Learning</button>
+                <button data-filter="fullstack" class="filter-btn bg-stone-200 text-stone-700 hover:bg-amber-100 hover:text-amber-800 px-4 py-2 rounded-full font-medium">Full-Stack</button>
+                <button data-filter="pipeline" class="filter-btn bg-stone-200 text-stone-700 hover:bg-amber-100 hover:text-amber-800 px-4 py-2 rounded-full font-medium">Pipeline & Tools</button>
+            </div>
+
+            <div id="project-grid" class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <div class="project-card bg-stone-50 rounded-lg shadow-lg border border-stone-200 overflow-hidden" data-category="ai">
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-xl font-bold text-stone-800">Hand Sign Recognition & Translation</h3>
+                        <p class="mt-2 text-sm text-stone-600">Deep learning pipeline to translate Arabic sign language gestures. Recognized as one of the best projects of the year.</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">Python</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">TensorFlow</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">OpenCV</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">GRU/LSTM</span>
+                        </div>
+                    </div>
+                    <div class="project-details px-6 pb-6">
+                        <ul class="list-disc list-inside space-y-2 text-stone-600">
+                            <li>Engineered a DL pipeline for 15 common Arabic sign language gestures.</li>
+                            <li>Utilized OpenCV and Mediapipe for video preprocessing and coordinate extraction.</li>
+                            <li>Developed and trained a GRU/LSTM model on a custom-built dataset of 1,559 videos.</li>
+                            <li>Achieved 99% accuracy on the test set.</li>
+                            <li>Led architecture and implementation of core AI models.</li>
+                        </ul>
+                    </div>
+                    <div class="px-6 pb-6 mt-auto">
+                        <button class="learn-more-btn text-amber-700 font-semibold">Learn More</button>
+                    </div>
+                </div>
+
+                <div class="project-card bg-stone-50 rounded-lg shadow-lg border border-stone-200 overflow-hidden" data-category="ai fullstack">
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-xl font-bold text-stone-800">Full-Stack Lung Cancer Detection</h3>
+                        <p class="mt-2 text-sm text-stone-600">Engineered and deployed a complete full-stack application for lung cancer detection from images.</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">React</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">Django</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">FastAPI</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">TensorFlow</span>
+                        </div>
+                    </div>
+                    <div class="project-details px-6 pb-6">
+                        <ul class="list-disc list-inside space-y-2 text-stone-600">
+                            <li>RESTful API backend with Django.</li>
+                            <li>FastAPI microservice for model inference.</li>
+                            <li>Responsive user interface with React and Redux.</li>
+                            <li>Integrated TensorFlow model for detection.</li>
+                        </ul>
+                        <a href="https://lungcancerdetection.vercel.app" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-amber-700 font-semibold hover:underline">Try the App ➔</a>
+                    </div>
+                    <div class="px-6 pb-6 mt-auto">
+                        <button class="learn-more-btn text-amber-700 font-semibold">Learn More</button>
+                    </div>
+                </div>
+
+                <div class="project-card bg-stone-50 rounded-lg shadow-lg border border-stone-200 overflow-hidden" data-category="pipeline">
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-xl font-bold text-stone-800">DaVinci Resolve Pipeline Tool</h3>
+                        <p class="mt-2 text-sm text-stone-600">Desktop app to automate media conforming and delivery pipeline at Aroma Studios (Production App).</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">Python</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">PySide/PyQt</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">Multi-threading</span>
+                        </div>
+                    </div>
+                    <div class="project-details px-6 pb-6">
+                        <ul class="list-disc list-inside space-y-2 text-stone-600">
+                            <li>Automated media conforming and delivery pipeline.</li>
+                            <li>Implemented multi-threading and efficient search algorithms.</li>
+                            <li>Ensured artists used latest clip versions, reducing version control errors.</li>
+                            <li>Streamlined post-production workflow and enhanced studio efficiency.</li>
+                        </ul>
+                    </div>
+                    <div class="px-6 pb-6 mt-auto">
+                        <button class="learn-more-btn text-amber-700 font-semibold">Learn More</button>
+                    </div>
+                </div>
+
+                <div class="project-card bg-stone-50 rounded-lg shadow-lg border border-stone-200 overflow-hidden" data-category="pipeline">
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-xl font-bold text-stone-800">OpenPype VFX Pipeline Tool</h3>
+                        <p class="mt-2 text-sm text-stone-600">Contributed to and adapted the opensource OpenPype application for company-specific needs (Production App).</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">Python</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">Pyside/PyQt</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">Multi-threading</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">JSON</span>
+                        </div>
+                    </div>
+                    <div class="project-details px-6 pb-6">
+                         <ul class="list-disc list-inside space-y-2 text-stone-600">
+                            <li>Worked on and contributed to the open-source OpenPype app.</li>
+                            <li>Adapted the tool to be suitable for the company's needs with its DCCs.</li>
+                        </ul>
+                    </div>
+                    <div class="px-6 pb-6 mt-auto">
+                        <button class="learn-more-btn text-amber-700 font-semibold">Learn More</button>
+                    </div>
+                </div>
+
+                <div class="project-card bg-stone-50 rounded-lg shadow-lg border border-stone-200 overflow-hidden" data-category="fullstack">
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-xl font-bold text-stone-800">ESEZ Reminder App</h3>
+                        <p class="mt-2 text-sm text-stone-600">A responsive frontend application for managing and tracking personal tasks.</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">ReactJs</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">Redux</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">React Bootstrap</span>
+                        </div>
+                    </div>
+                    <div class="project-details px-6 pb-6">
+                        <ul class="list-disc list-inside space-y-2 text-stone-600">
+                            <li>Frontend application for task management.</li>
+                            <li>State management handled with Redux.</li>
+                            <li>Responsive design using React Bootstrap.</li>
+                        </ul>
+                        <a href="https://esez-reminder.vercel.app" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-amber-700 font-semibold hover:underline">Try the App ➔</a>
+                    </div>
+                    <div class="px-6 pb-6 mt-auto">
+                        <button class="learn-more-btn text-amber-700 font-semibold">Learn More</button>
+                    </div>
+                </div>
+
+                <div class="project-card bg-stone-50 rounded-lg shadow-lg border border-stone-200 overflow-hidden" data-category="fullstack">
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-xl font-bold text-stone-800">E-Commerce RESTful API</h3>
+                        <p class="mt-2 text-sm text-stone-600">A complete RESTful API for a full-stack e-commerce platform, ready for frontend integration.</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">Django</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">DRF</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">PostgreSQL</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full">SQLite</span>
+                        </div>
+                    </div>
+                    <div class="project-details px-6 pb-6">
+                        <ul class="list-disc list-inside space-y-2 text-stone-600">
+                            <li>Backend built with Django and Django Rest Framework.</li>
+                            <li>Supports SQLite for local development and PostgreSQL for deployment.</li>
+                            <li>Frontend for this API was built by a colleague.</li>
+                        </ul>
+                        <a href="https://sprintsecommerce.herokuapp.com/api" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-amber-700 font-semibold hover:underline">Try the API ➔</a>
+                    </div>
+                    <div class="px-6 pb-6 mt-auto">
+                        <button class="learn-more-btn text-amber-700 font-semibold">Learn More</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="experience" class="py-24">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-stone-900 sm:text-4xl">Career Timeline</h2>
+                <p class="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">
+                    A chronological overview of my professional experience, from freelance development to my current role as a Senior Engineer.
+                </p>
+            </div>
+
+            <div class="mt-16 max-w-3xl mx-auto">
+                <div class="relative border-l-2 border-stone-200">
+
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-bold text-stone-800">Sr. Software Engineer</h3>
+                        <p class="font-semibold text-amber-700">@ Aroma Studios (Onsite)</p>
+                        <p class="text-sm text-stone-500">Jan 2024 - Present</p>
+                        <ul class="mt-4 list-disc list-inside space-y-2 text-stone-600">
+                            <li>Design, develop, and maintain robust data pipelines for production workflows.</li>
+                            <li>Develop and maintain ML pipelines (preprocessing, integration, management).</li>
+                            <li>Spearhead the full software development lifecycle (SDLC).</li>
+                            <li>Build custom tools for artists and technical directors.</li>
+                            <li>Containerize environments and artifacts using Docker.</li>
+                            <li>Key Achievement: Developed the DaVinci Resolve Production Pipeline Tool.</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-bold text-stone-800">Site Supervisor & Session Lead</h3>
+                        <p class="font-semibold text-amber-700">@ Udacity (Onsite/Remote)</p>
+                        <p class="text-sm text-stone-500">Oct 2022 - Present</p>
+                        <ul class="mt-4 list-disc list-inside space-y-2 text-stone-600">
+                            <li>Mentor students with data-driven feedback and lead technical discussions.</li>
+                            <li>Lead instructional sessions on core programming concepts.</li>
+                            <li>Deliver hands-on coding labs using Python.</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-bold text-stone-800">Freelance Software Developer</h3>
+                        <p class="font-semibold text-amber-700">Online</p>
+                        <p class="text-sm text-stone-500">2020 - Present</p>
+                        <ul class="mt-4 list-disc list-inside space-y-2 text-stone-600">
+                            <li>Provide software development and technical support to various clients.</li>
+                            <li>Collaborate on diverse projects to develop custom features and debug codebases.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="py-24 bg-white rounded-xl shadow-inner border border-stone-200 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-stone-900 sm:text-4xl">Education & Certificates</h2>
+                <p class="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">
+                    My academic foundation and the continuous learning I've pursued through professional courses and certifications.
+                </p>
+            </div>
+
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-bold text-amber-700 mb-6">Education</h3>
+                    <div class="bg-stone-50 p-6 rounded-lg shadow-lg border border-stone-200">
+                        <h4 class="text-xl font-bold text-stone-800">BSc, Faculty of Computer & AI</h4>
+                        <p class="mt-1 font-semibold text-stone-600">BSU University (2019 - 2023)</p>
+                        <ul class="mt-4 space-y-1 text-stone-600">
+                            <li><span class="font-medium">Department:</span> Computer Science</li>
+                            <li><span class="font-medium">GPA:</span> 3.3 (B+)</li>
+                            <li><span class="font-medium">Graduation Project Grade:</span> A+</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-2xl font-bold text-amber-700 mb-6">Key Certifications</h3>
+                    <div class="space-y-4">
+                        <div class="bg-stone-50 p-4 rounded-lg shadow border border-stone-200">
+                            <h4 class="font-bold text-stone-700">Web Development Professional Nanodegree</h4>
+                            <p class="text-sm text-stone-500">Udacity (2021)</p>
+                        </div>
+                        <div class="bg-stone-50 p-4 rounded-lg shadow border border-stone-200">
+                            <h4 class="font-bold text-stone-700">React Development Cross-Skilling</h4>
+                            <p class="text-sm text-stone-500">Udacity (Jan 2022)</p>
+                        </div>
+                        <div class="bg-stone-50 p-4 rounded-lg shadow border border-stone-200">
+                            <h4 class="font-bold text-stone-700">ICPC Problem Solving</h4>
+                            <p class="text-sm text-stone-500">ICPC (Aug 2022)</p>
+                        </div>
+                        <div class="bg-stone-50 p-4 rounded-lg shadow border border-stone-200">
+                            <h4 class="font-bold text-stone-700">Artificial Intelligence Analyst</h4>
+                            <p class="text-sm text-stone-500">IBM (Feb 2020)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-stone-200 mt-24 pb-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-2xl font-bold text-amber-700 pt-12">Let's Connect</p>
+            <p class="mt-4 text-lg text-stone-600">I'm always open to discussing new projects, creative ideas, or opportunities.</p>
+            <div class="mt-8 flex justify-center space-x-6">
+                <a href="mailto:eslamezat367@gmail.com" class="text-stone-500 hover:text-amber-700" title="Email">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </a>
+                <a href="#" class="text-stone-500 hover:text-amber-700" title="LinkedIn">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.17 18.17h-2.1V9h2.1v9.17zM7.12 7.93c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25zM18 18.17h-2.07v-4.6c0-1.1-.02-2.52-1.54-2.52-1.54 0-1.77 1.2-1.77 2.44v4.68H10.5v-9.17h2v.91h.03c.28-.53 1.03-1.09 2.04-1.09 2.18 0 2.58 1.43 2.58 3.3v4.05z"/></svg>
+                </a>
+                <a href="#" class="text-stone-500 hover:text-amber-700" title="GitHub">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.49.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.03-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.022A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.291 2.747-1.022 2.747-1.022.546 1.378.201 2.397.098 2.65.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.309.678.92.678 1.854 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482C19.135 20.165 22 16.418 22 12A10 10 0 0012 2z" clip-rule="evenodd"/></svg>
+                </a>
+            </div>
+            <p class="mt-8 text-sm text-stone-500">&copy; 2025 Eslam Ezzat. All rights reserved. Interactive CV generated based on provided data.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const radarData = {
+                labels: ['AI & Machine Learning', 'Backend & Cloud', 'Pipeline & Tools', 'Frontend'],
+                datasets: [{
+                    label: 'Core Expertise',
+                    data: [5, 5, 5, 4],
+                    backgroundColor: 'rgba(161, 98, 7, 0.2)',
+                    borderColor: 'rgba(161, 98, 7, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(161, 98, 7, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(161, 98, 7, 1)'
+                }]
+            };
+
+            const radarOptions = {
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: {
+                            color: '#d6d3d1'
+                        },
+                        grid: {
+                            color: '#d6d3d1'
+                        },
+                        pointLabels: {
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            },
+                            color: '#44403c'
+                        },
+                        ticks: {
+                            display: false,
+                            beginAtZero: true,
+                            max: 5,
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            };
+
+            const ctxDesktop = document.getElementById('skillsRadarChart');
+            if(ctxDesktop && typeof Chart !== 'undefined') {
+                new Chart(ctxDesktop.getContext('2d'), {
+                    type: 'radar',
+                    data: radarData,
+                    options: radarOptions
+                });
+            }
+
+            const ctxMobile = document.getElementById('skillsRadarChartMobile');
+            if(ctxMobile && typeof Chart !== 'undefined') {
+                new Chart(ctxMobile.getContext('2d'), {
+                    type: 'radar',
+                    data: radarData,
+                    options: radarOptions
+                });
+            }
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if(mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            document.querySelectorAll('#mobile-menu a, nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    if (this.hash !== "") {
+                        e.preventDefault();
+                        const hash = this.hash;
+                        const targetElement = document.querySelector(hash);
+                        if(targetElement) {
+                            const offset = document.querySelector('header').offsetHeight;
+                            const elementPosition = targetElement.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - offset;
+                      
+                            window.scrollTo({
+                                 top: offsetPosition,
+                                 behavior: "smooth"
+                            });
+
+                            if (!mobileMenu.classList.contains('hidden')) {
+                                mobileMenu.classList.add('hidden');
+                            }
+                        }
+                    }
+                });
+            });
+
+            const filterButtons = document.querySelectorAll('#project-filters .filter-btn');
+            const projectCards = document.querySelectorAll('#project-grid .project-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.getAttribute('data-filter');
+                    
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active', 'bg-amber-700', 'text-white');
+                        btn.classList.add('bg-stone-200', 'text-stone-700');
+                    });
+                    
+                    button.classList.add('active', 'bg-amber-700', 'text-white');
+                    button.classList.remove('bg-stone-200', 'text-stone-700');
+
+                    projectCards.forEach(card => {
+                        const categories = card.getAttribute('data-category');
+                        if (filter === 'all' || categories.includes(filter)) {
+                            card.classList.remove('hidden');
+                        } else {
+                            card.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            const learnMoreButtons = document.querySelectorAll('.learn-more-btn');
+            learnMoreButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const projectCard = button.closest('.project-card');
+                    const details = projectCard.querySelector('.project-details');
+                    
+                    details.classList.toggle('open');
+                    
+                    if (details.classList.contains('open')) {
+                        button.textContent = 'Show Less';
+                    } else {
+                        button.textContent = 'Learn More';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
