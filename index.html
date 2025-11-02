@@ -97,17 +97,7 @@
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800 antialiased dark:bg-stone-950 dark:text-stone-300">
-
-    <!-- 
-        Chosen Palette: Warm Sand (Background: stone-50, Text: stone-800, Primary/Accent: amber-700, Secondary/Highlights: amber-100, Borders: stone-300)
-        Application Structure Plan: The static, linear CV is transformed into a non-linear, interactive portfolio. A sticky top navigation bar allows users to jump to key sections: Skills, Projects, Experience, and Education. This structure prioritizes user exploration. The 'Projects' section is the interactive core, featuring JavaScript-powered filter buttons (All, AI/ML, Full-Stack, Tools) that allow recruiters to instantly see relevant work, which is far more usable than a long list. The 'Skills' section uses a Radar Chart (Chart.js) to provide a high-level visual summary of the candidate's core competencies (AI, Backend, Pipelines, Frontend), making his profile shape immediately understandable. The 'Experience' section is reimagined as a clean, vertical timeline to visually narrate his career progression. This SPA structure is designed for task-based information retrieval (e.g., 'Show me his AI projects') rather than static, linear reading.
-        Visualization & Content Choices: 
-        1. Info: Candidate's core competencies (AI/ML, Backend, Pipelines, Frontend). Goal: Inform (at-a-glance summary). Viz/Method: Radar Chart. Interaction: None (summary graphic). Justification: A list of skills is dense; a radar chart instantly communicates the candidate's multi-faceted expertise. Library: Chart.js (Canvas).
-        2. Info: All projects (6+). Goal: Organize, Compare, Inform. Viz/Method: A filterable grid of "Project Cards" (HTML/CSS/Tailwind). Interaction: 1. Filtering: JS buttons (All, AI/ML, Full-Stack, Tools) toggle card visibility based on data attributes. 2. Details: A 'Learn More' button on each card expands an inline section to show full details, keeping the user in context. Justification: Allows recruiters to drill down to their specific area of interest (e.g., 'AI') without reading irrelevant projects. Library: Vanilla JS (DOM).
-        3. Info: Employment History. Goal: Show change/progression. Viz/Method: Vertical Timeline (HTML/CSS/Tailwind). Interaction: Hover effects. Justification: A timeline is a more visually engaging and intuitive way to present chronological data. Library: N/A (HTML/CSS).
-        4. Info: Detailed Skills List. Goal: Inform (specific keywords). Viz/Method: Grouped lists of "pills" (styled spans) by category. Justification: Complements the high-level Radar Chart with specific, parsable keywords for technical viewers. Library: N/A (HTML/CSS).
-        CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
-    --><header class="sticky top-0 z-50 w-full bg-stone-50/90 dark:bg-stone-900/80 backdrop-blur-sm border-b border-stone-200 dark:border-stone-700">
+    <header class="sticky top-0 z-50 w-full bg-stone-50/90 dark:bg-stone-900/80 backdrop-blur-sm border-b border-stone-200 dark:border-stone-700">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0">
@@ -182,65 +172,54 @@
                 </p>
             </div>
             
-            <div class="md:hidden mt-12">
-                <div class="w-full max-w-md mx-auto p-4 rounded-xl">
-                    <div class="bg-white dark:bg-stone-900 rounded-lg shadow-xl p-6 border border-stone-200 dark:border-stone-700">
-                        <p class="text-xl font-bold text-center text-stone-700 dark:text-stone-200 mb-4">Core Competencies</p>
-                        <div class="chart-container">
-                            <canvas id="skillsRadarChartMobile"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700">
                     <h3 class="text-xl font-bold text-amber-700 dark:text-amber-600 mb-4">Machine Learning & Data</h3>
                     <div class="flex flex-wrap gap-2">
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Python</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">TensorFlow</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Scikit-learn</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Pandas</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">NumPy</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">OpenCV</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Mediapipe</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Python</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">TensorFlow</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Scikit-learn</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Pandas</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">NumPy</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">OpenCV</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Mediapipe</span>
                     </div>
                 </div>
                 <div class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700">
                     <h3 class="text-xl font-bold text-amber-700 dark:text-amber-600 mb-4">Backend & Cloud</h3>
                     <div class="flex flex-wrap gap-2">
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Django</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Django Rest Framework</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">SQL</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">PostgreSQL</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">MongoDB</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Docker</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">AWS</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Django</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Django Rest Framework</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">SQL</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">PostgreSQL</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">MongoDB</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Docker</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">AWS</span>
                     </div>
                 </div>
                 <div class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700">
                     <h3 class="text-xl font-bold text-amber-700 dark:text-amber-600 mb-4">Frontend</h3>
                     <div class="flex flex-wrap gap-2">
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">ReactJs</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Redux</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">JavaScript</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">HTML</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">CSS</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Bootstrap</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">ReactJs</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Redux</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">JavaScript</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">HTML</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">CSS</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Bootstrap</span>
                     </div>
                 </div>
                 <div class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700">
                     <h3 class="text-xl font-bold text-amber-700 dark:text-amber-600 mb-4">Tools & Concepts</h3>
                     <div class="flex flex-wrap gap-2">
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Git</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">GitHub</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Linux</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">CI/CD</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">PyQt/PySide</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Multi-threading</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">OOP</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Agile</span>
-                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">TDD</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Git</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">GitHub</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Linux</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">CI/CD</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">PyQt/PySide</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Multi-threading</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">OOP</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">Agile</span>
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-sm font-medium px-3 py-1 rounded-full">TDD</span>
                     </div>
                 </div>
             </div>
@@ -256,9 +235,9 @@
 
             <div id="project-filters" class="mt-12 flex flex-wrap justify-center gap-2 md:gap-4">
                 <button data-filter="all" class="filter-btn active bg-amber-700 text-white px-4 py-2 rounded-full font-medium">All Projects</button>
-                <button data-filter="ai" class="filter-btn bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-amber-100 dark:hover:bg-stone-600 hover:text-amber-800 dark:hover:text-amber-400 px-4 py-2 rounded-full font-medium">AI & Machine Learning</button>
-                <button data-filter="fullstack" class="filter-btn bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-amber-100 dark:hover:bg-stone-600 hover:text-amber-800 dark:hover:text-amber-400 px-4 py-2 rounded-full font-medium">Full-Stack</button>
-                <button data-filter="pipeline" class="filter-btn bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-amber-100 dark:hover:bg-stone-600 hover:text-amber-800 dark:hover:text-amber-400 px-4 py-2 rounded-full font-medium">Pipeline & Tools</button>
+                <button data-filter="ai" class="filter-btn bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-amber-100 dark:hover:bg-stone-600 hover:text-amber-800 dark:hover:text-amber-600 px-4 py-2 rounded-full font-medium">AI & Machine Learning</button>
+                <button data-filter="fullstack" class="filter-btn bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-amber-100 dark:hover:bg-stone-600 hover:text-amber-800 dark:hover:text-amber-600 px-4 py-2 rounded-full font-medium">Full-Stack</button>
+                <button data-filter="pipeline" class="filter-btn bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-amber-100 dark:hover:bg-stone-600 hover:text-amber-800 dark:hover:text-amber-600 px-4 py-2 rounded-full font-medium">Pipeline & Tools</button>
             </div>
 
             <div id="project-grid" class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -268,10 +247,10 @@
                         <h3 class="text-xl font-bold text-stone-800 dark:text-stone-100">Hand Sign Recognition & Translation</h3>
                         <p class="mt-2 text-sm text-stone-600 dark:text-stone-400">Deep learning pipeline to translate Arabic sign language gestures. Recognized as one of the best projects of the year.</p>
                         <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Python</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">TensorFlow</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">OpenCV</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">GRU/LSTM</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Python</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">TensorFlow</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">OpenCV</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">GRU/LSTM</span>
                         </div>
                     </div>
                     <div class="project-details px-6 pb-6">
@@ -293,10 +272,10 @@
                         <h3 class="text-xl font-bold text-stone-800 dark:text-stone-100">Full-Stack Lung Cancer Detection</h3>
                         <p class="mt-2 text-sm text-stone-600 dark:text-stone-400">Engineered and deployed a complete full-stack application for lung cancer detection from images.</p>
                         <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">React</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Django</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">FastAPI</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">TensorFlow</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">React</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Django</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">FastAPI</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">TensorFlow</span>
                         </div>
                     </div>
                     <div class="project-details px-6 pb-6">
@@ -318,9 +297,9 @@
                         <h3 class="text-xl font-bold text-stone-800 dark:text-stone-100">DaVinci Resolve Pipeline Tool</h3>
                         <p class="mt-2 text-sm text-stone-600 dark:text-stone-400">Desktop app to automate media conforming and delivery pipeline at Aroma Studios (Production App).</p>
                         <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Python</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">PySide/PyQt</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Multi-threading</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Python</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">PySide/PyQt</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Multi-threading</span>
                         </div>
                     </div>
                     <div class="project-details px-6 pb-6">
@@ -341,10 +320,10 @@
                         <h3 class="text-xl font-bold text-stone-800 dark:text-stone-100">OpenPype VFX Pipeline Tool</h3>
                         <p class="mt-2 text-sm text-stone-600 dark:text-stone-400">Contributed to and adapted the opensource OpenPype application for company-specific needs (Production App).</p>
                         <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Python</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Pyside/PyQt</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Multi-threading</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">JSON</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Python</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Pyside/PyQt</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Multi-threading</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">JSON</span>
                         </div>
                     </div>
                     <div class="project-details px-6 pb-6">
@@ -363,9 +342,9 @@
                         <h3 class="text-xl font-bold text-stone-800 dark:text-stone-100">ESEZ Reminder App</h3>
                         <p class="mt-2 text-sm text-stone-600 dark:text-stone-400">A responsive frontend application for managing and tracking personal tasks.</p>
                         <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">ReactJs</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Redux</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">React Bootstrap</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">ReactJs</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Redux</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">React Bootstrap</span>
                         </div>
                     </div>
                     <div class="project-details px-6 pb-6">
@@ -386,10 +365,10 @@
                         <h3 class="text-xl font-bold text-stone-800 dark:text-stone-100">E-Commerce RESTful API</h3>
                         <p class="mt-2 text-sm text-stone-600 dark:text-stone-400">A complete RESTful API for a full-stack e-commerce platform, ready for frontend integration.</p>
                         <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Django</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">DRF</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">PostgreSQL</span>
-                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">SQLite</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">Django</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">DRF</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">PostgreSQL</span>
+                            <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/25 dark:text-amber-500 text-xs font-medium px-3 py-1 rounded-full">SQLite</span>
                         </div>
                     </div>
                     <div class="project-details px-6 pb-6">
@@ -521,7 +500,7 @@
                     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.49.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.03-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.022A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.291 2.747-1.022 2.747-1.022.546 1.378.201 2.397.098 2.65.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.309.678.92.678 1.854 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482C19.135 20.165 22 16.418 22 12A10 10 0 0012 2z" clip-rule="evenodd"/></svg>
                 </a>
             </div>
-            <p class="mt-8 text-sm text-stone-500 dark:text-stone-400">&copy; 2025 Eslam Ezzat. All rights reserved. Interactive CV generated based on provided data.</p>
+            <p class="mt-8 text-sm text-stone-500 dark:text-stone-400">&copy; 2025 Eslam Ezzat. All rights reserved.</p>
         </div>
     </footer>
 
