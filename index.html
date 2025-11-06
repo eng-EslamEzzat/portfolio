@@ -141,8 +141,8 @@
                     <h1 class="text-4xl md:text-6xl font-bold text-stone-900 dark:text-white leading-tight">
                         Eslam Ezzat
                     </h1>
-                    <p class="mt-4 text-2xl md:text-3xl font-medium text-amber-700 dark:text-amber-600">
-                        <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=28&pause=1000&color=D97706&width=435&lines=Full-Stack+Engineer;ML+%26+AI+Engineer;Pipeline+Specialist" alt="Typing SVG" />
+                    <p class="mt-4 flex justify-center md:justify-start">
+                        <img id="typing-svg" src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=28&pause=1000&color=D97706&width=435&lines=Full-Stack+Engineer;ML+%26+AI+Engineer;Pipeline+Specialist" alt="Typing SVG" />
                     </p>
                     <p class="mt-4 text-lg text-stone-600 dark:text-stone-400 max-w-xl mx-auto md:mx-0">
                         Results-driven Full-Stack Engineer with 3+ years of experience designing, developing, and deploying scalable web applications. Proven ability to build end-to-end solutions using modern backend frameworks (Python/Django, FastAPI), RESTful APIs, and React. A fast learner adept at mastering new technology stacks.
@@ -506,7 +506,28 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+                document.addEventListener('DOMContentLoaded', () => {
+
+            const typingSvg = document.getElementById('typing-svg');
+            if (typingSvg) {
+                const smallScreenSrc = "https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=28&pause=1000&color=D97706&center=true&vCenter=true&width=435&lines=Full-Stack+Engineer;ML+%26+AI+Engineer;Pipeline+Specialist";
+                const largeScreenSrc = "https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=28&pause=1000&color=D97706&width=435&lines=Full-Stack+Engineer;ML+%26+AI+Engineer;Pipeline+Specialist";
+
+                const mediaQuery = window.matchMedia('(max-width: 767px)');
+
+                function handleScreenChange(e) {
+                    if (e.matches) {
+                        typingSvg.src = smallScreenSrc;
+                    } else {
+                        typingSvg.src = largeScreenSrc;
+                    }
+                }
+
+                mediaQuery.addEventListener('change', handleScreenChange);
+
+                // Initial check
+                handleScreenChange(mediaQuery);
+            }
 
             const themeToggleBtn = document.getElementById('theme-toggle');
             const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
